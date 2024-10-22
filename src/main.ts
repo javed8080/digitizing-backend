@@ -1,6 +1,8 @@
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { GlobalExceptionFilter } from './utils/global-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,9 +15,11 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('swagger', app, document);
-
+  const globalExceptionFilter = app.get(GlobalExceptionFilter);
+  app.useGlobalFilters(globalExceptionFilter);
+  app.useGlobalPipes(new ValidationPipe());
   app.enableCors();
-  console.log("service started 3000");
-  await app.listen(3000);
+  console.log('service started 8001');
+  await app.listen(8001);
 }
 bootstrap();

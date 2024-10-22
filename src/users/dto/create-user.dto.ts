@@ -1,59 +1,80 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { Role } from "src/enums/role";
-import { Status } from "src/enums/status";
-import { CreateCustomerProfileDto } from "./create-customer-profile.dto";
-import { CreateAdminProfileDto } from "./create-admin-profile.dto";
-import { IsOptional } from "class-validator";
-
-
+import { ApiProperty } from '@nestjs/swagger';
+import { IsIn, IsNotEmpty, IsOptional } from 'class-validator';
+import { Role } from 'src/enums/role';
+import { Status } from 'src/enums/status';
+import { CreateCustomerProfileDto } from './create-customer-profile.dto';
 
 export class Permissions {
-    @ApiProperty()
-    read: boolean;
-    @ApiProperty()
-    write: boolean;
-    @ApiProperty()
-    update: boolean;
-    @ApiProperty()
-    delete: boolean;
+  @ApiProperty()
+  read: boolean;
+  @ApiProperty()
+  write: boolean;
+  @ApiProperty()
+  update: boolean;
+  @ApiProperty()
+  delete: boolean;
 }
 
 export class ModulePermissionDTO {
-    @ApiProperty()
-    moduleId: string; // You can use the ID of the referenced module here
-    @ApiProperty()
-    permissions: Permissions;
+  @ApiProperty()
+  moduleId: string;
+  permissions: Permissions;
 }
 
 export class CreateUserDto {
-    @ApiProperty()
-    name: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  name: string;
 
-    @ApiProperty()
-    email: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  email: string;
 
-    @ApiProperty()
-    username: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  username: string;
 
-    @ApiProperty()
-    password: string;
+  @ApiProperty()
+  @IsNotEmpty()
+  password: string;
 
-    @ApiProperty()
-    status: Status;
+  @ApiProperty()
+  @IsNotEmpty()
+  status: Status;
 
-    @ApiProperty()
-    role: Role;
+  @ApiProperty()
+  @IsNotEmpty()
+  role: Role;
 
-    activation_code: String;
+  @IsNotEmpty()
+  activation_code: String;
 
-    is_verfied: boolean;
+  @IsNotEmpty()
+  is_verified: boolean;
 
-    @ApiProperty()
-    profile: CreateCustomerProfileDto
+  @ApiProperty()
+  @IsNotEmpty()
+  profile: CreateCustomerProfileDto;
 
-    created_at: String
-    
-    @IsOptional()
-    @ApiProperty({ type: ModulePermissionDTO, isArray: true })
-    modulePermissions: ModulePermissionDTO[];
+  @IsOptional()
+  @ApiProperty({ type: ModulePermissionDTO, isArray: true })
+  modulePermissions: ModulePermissionDTO[];
+}
+
+export class CreateClientDto {
+  @IsNotEmpty()
+  name: string;
+
+  @IsNotEmpty()
+  email: string;
+
+  @IsNotEmpty()
+  username: string;
+
+  @IsNotEmpty()
+  password: string;
+
+  @IsNotEmpty()
+  @IsIn([Role.customer])
+  role: string;
 }

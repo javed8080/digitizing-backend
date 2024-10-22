@@ -1,12 +1,14 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from 'mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose'; // Import mongoose
-import { ProjectModules, ProjectModulesSchema } from "src/user-module/entities/project-modules.entity";
-import { generateUniqueInteger } from "src/utils/unique-id-generator";
+import { Document } from 'mongoose';
+import { ProjectModules } from 'src/user-module/entities/project-modules.entity';
+import { generateUniqueInteger } from 'src/utils/unique-id-generator';
 
-@Schema({ versionKey: false })
+@Schema({
+  versionKey: false,
+  timestamps: true,
+})
 export class User extends Document {
-
   @Prop({ default: generateUniqueInteger })
   _id: number;
 
@@ -32,19 +34,18 @@ export class User extends Document {
   activation_code: String;
 
   @Prop({ default: null })
-  is_verfied: boolean;
+  is_verified: boolean;
 
   @Prop({ default: null, type: {} })
-  profile: any
-
-  created_at: String
-
-
+  profile: any;
 
   @Prop({
     type: [
       {
-        moduleId: { type: mongoose.Schema.Types.ObjectId, ref: ProjectModules.name },
+        moduleId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: ProjectModules.name,
+        },
         module: {
           name: String,
         },
@@ -61,7 +62,7 @@ export class User extends Document {
     moduleId: mongoose.Schema.Types.ObjectId;
     module: {
       name: string;
-    },
+    };
     permissions: {
       read: boolean;
       write: boolean;
@@ -69,8 +70,6 @@ export class User extends Document {
       delete: boolean;
     };
   }[];
-
-  
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
